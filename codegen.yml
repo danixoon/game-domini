@@ -1,0 +1,33 @@
+schema:
+  - "./src/graphql/schemas/index.ts":
+documents: "./client/src/graphql/*.gql"
+generates:
+  ./client/src/graphql/__generated__/index.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-graphql-request
+    config:
+      omitOperationSuffix: true
+      scalars:
+        Date: number
+      fetcher: fetcher
+
+  ./src/graphql/generated/index.ts:
+    plugins:
+      - typescript
+      - typescript-mongodb
+      - typescript-resolvers
+    config:
+      avoidOptionals: true
+      enumsAsString: false
+      enumsAsTypes: true
+      constEnums: true
+      scalars:
+        Void: null
+        Date: Date
+        ID: ObjectID
+      contextType: Backend.GraphQL.GraphQLContext
+require:
+  - ts-node/register
+  - tsconfig-paths/register

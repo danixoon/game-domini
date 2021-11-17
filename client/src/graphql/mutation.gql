@@ -1,0 +1,3 @@
+mutation test($username: String!) {
+  test(input: $username)
+}

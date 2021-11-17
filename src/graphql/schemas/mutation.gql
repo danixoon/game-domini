@@ -1,0 +1,4 @@
+type Mutation {
+  # Тест
+  test(input: String!): String!
+}
