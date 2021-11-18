@@ -1,12 +1,12 @@
-import { getSdk, Sdk } from "@generated";
+// import { getSdk, Sdk } from "@generated";
 import { AxiosError } from "axios";
 import { GraphQLFormattedError } from "graphql";
 import { GraphQLClient } from "graphql-request";
-import { useQuery } from "graphql/query";
+// import { useQuery } from "graphql/query";
 import { useIsFirstEffect } from "hooks/useIsFirstEffect";
 import * as React from "react";
-import { useQueryCache } from "react-query";
-import { useHistory } from "react-router-dom";
+import { useQueryClient } from "react-query";
+// import { useHistory } from "react-router-dom";
 
 export class BackendError extends Error {
   constructor(message: string, payload: { code: number | null }) {
@@ -18,7 +18,7 @@ export class BackendError extends Error {
 
 const parseError = (error: GraphQLFormattedError[]) => {
   return new BackendError(error[0].message, {
-    code: error[0].extensions?.code || null,
+    code: (error[0].extensions?.code as any) || null,
   });
 };
 
@@ -27,11 +27,11 @@ const getClient = () => {
 };
 
 type ApiContextValue = {
-  api: Sdk;
+  // api: Sdk;
 };
 
 export const ApiContext = React.createContext<ApiContextValue>({
-  api: getSdk(getClient()),
+  // api: getSdk(getClient()),
 });
 
 export const ApiProvider: React.FC<{}> = (props) => {
@@ -39,6 +39,7 @@ export const ApiProvider: React.FC<{}> = (props) => {
 
   const client = getClient();
 
+  //@ts-ignore
   const api = getSdk(client, async (fn) => {
     try {
       const result = await fn();
@@ -49,7 +50,7 @@ export const ApiProvider: React.FC<{}> = (props) => {
     }
   });
 
-  const cache = useQueryCache();
+  const cache = useQueryClient();
 
   return (
     <ApiContext.Provider

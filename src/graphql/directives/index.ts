@@ -1,22 +1,23 @@
 import { DocumentNode } from "graphql";
-import { IExecutableSchemaDefinition, mergeTypeDefs } from "graphql-tools";
+import { mergeTypeDefs } from "@graphql-tools/merge";
+import { IExecutableSchemaDefinition } from "@graphql-tools/schema";
 
-const enchanceDirective = (
-  directive: () => ReturnType<Backend.GraphQL.DirectiveCreator>,
-  schemaDef: IExecutableSchemaDefinition<Backend.GraphQL.GraphQLContext>
-) => {
-  const schemaTransformers = schemaDef.schemaTransforms || [];
+// const enchanceDirective = (
+//   directive: () => ReturnType<Backend.GraphQL.DirectiveCreator>,
+//   schemaDef: IExecutableSchemaDefinition<Backend.GraphQL.GraphQLContext>
+// ) => {
+//   const schemaTransformers = schemaDef.schemaTransforms || [];
 
-  const { typeDefs, transformer } = directive();
+//   const { typeDefs, transformer } = directive();
 
-  schemaTransformers.push(transformer);
+//   schemaTransformers.push(transformer);
 
-  schemaDef.typeDefs = mergeTypeDefs([
-    (schemaDef.typeDefs as DocumentNode) || "",
-    typeDefs,
-  ]);
-  schemaDef.schemaTransforms = schemaTransformers;
-};
+//   schemaDef.typeDefs = mergeTypeDefs([
+//     (schemaDef.typeDefs as DocumentNode) || "",
+//     typeDefs,
+//   ]);
+//   schemaDef.schemaTransforms = schemaTransformers;
+// };
 
 export const enchanceDirectives = (
   schemaDef: IExecutableSchemaDefinition<Backend.GraphQL.GraphQLContext>

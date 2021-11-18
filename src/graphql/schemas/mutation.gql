@@ -1,3 +1,9 @@
+# Inputs
+input AdditionalEntityFields {
+  path: String
+  type: String
+}
+
 type Mutation {
   # Тест
   test(input: String!): String!

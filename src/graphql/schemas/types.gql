@@ -1,8 +1,8 @@
 scalar Date
 
-# Пользователь 
+# Пользователь
 type User @entity {
   id: ID! @id
   # Имя пользователя
-  username: String! @column
+  username: String!
 }

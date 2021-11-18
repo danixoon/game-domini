@@ -1,5 +1,5 @@
 schema:
-  - "./src/graphql/schemas/index.ts":
+  - "./src/graphql/schemas/index.ts"
 documents: "./client/src/graphql/*.gql"
 generates:
   ./client/src/graphql/__generated__/index.ts:
@@ -23,6 +23,7 @@ generates:
       enumsAsString: false
       enumsAsTypes: true
       constEnums: true
+      federation: false
       scalars:
         Void: null
         Date: Date

@@ -17,10 +17,6 @@ const userSchema = createSchema<UserSchema>({
     required: true,
     unique: true,
   },
-  role: {
-    type: Types.String,
-    required: true,
-  },
 });
 
 export const UserModel = createModel<UserSchema>("User", userSchema);

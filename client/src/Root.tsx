@@ -1,6 +1,6 @@
 import { ApiProvider } from "providers/ApiProvider";
 import * as React from "react";
-import { QueryCache, ReactQueryCacheProvider } from "react-query";
+import { QueryClientProvider, QueryClient } from "react-query";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import RootLayout from "./layout/RootLayout";
 
@@ -8,17 +8,17 @@ import "./styles/default.css";
 
 export type RootContainerProps = {};
 
-const queryCache = new QueryCache();
+const queryClient = new QueryClient();
 
 const Root: React.FC<RootContainerProps> = (props) => {
   return (
-    <ReactQueryCacheProvider queryCache={queryCache}>
+    <QueryClientProvider client={queryClient}>
       <ApiProvider>
         <Router>
           <RootLayout />
         </Router>
       </ApiProvider>
-    </ReactQueryCacheProvider>
+    </QueryClientProvider>
   );
 };
 

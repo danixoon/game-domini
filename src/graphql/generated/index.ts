@@ -1,5 +1,6 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -14,19 +15,10 @@ export type Scalars = {
   Date: Date;
 };
 
-
-
-
-
-
-
-
-
 export type AdditionalEntityFields = {
-  path: Maybe<Scalars['String']>;
-  type: Maybe<Scalars['String']>;
+  path: InputMaybe<Scalars['String']>;
+  type: InputMaybe<Scalars['String']>;
 };
-
 
 export type IdDbObject = {
   __typename?: 'IdDbObject';
@@ -35,7 +27,6 @@ export type IdDbObject = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  /** Тест */
   test: Scalars['String'];
 };
 
@@ -46,22 +37,18 @@ export type MutationTestArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  /** Возвращает данные об активном пользователе */
   user: Maybe<User>;
 };
 
-/** Пользователь  */
 export type User = {
   __typename?: 'User';
   id: Scalars['ID'];
-  /** Имя пользователя */
   username: Scalars['String'];
 };
 
 import { ObjectID } from 'mongodb';
 export type UserDbObject = {
   _id: ObjectID,
-  username: string,
 };
 
 
@@ -72,21 +59,7 @@ export type ResolverTypeWrapper<T> = Promise<T> | T;
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-
-export type LegacyStitchingResolver<TResult, TParent, TContext, TArgs> = {
-  fragment: string;
-  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
-};
-
-export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
-  selectionSet: string;
-  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
-};
-export type StitchingResolver<TResult, TParent, TContext, TArgs> = LegacyStitchingResolver<TResult, TParent, TContext, TArgs> | NewStitchingResolver<TResult, TParent, TContext, TArgs>;
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
-  | ResolverFn<TResult, TParent, TContext, TArgs>
-  | ResolverWithResolve<TResult, TParent, TContext, TArgs>
-  | StitchingResolver<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -100,7 +73,7 @@ export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   args: TArgs,
   context: TContext,
   info: GraphQLResolveInfo
-) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
 
 export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -171,38 +144,50 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
 };
 
-export type AbstractEntityDirectiveArgs = {   discriminatorField: Scalars['String'];
-  additionalFields: Maybe<Array<Maybe<AdditionalEntityFields>>>; };
-
-export type AbstractEntityDirectiveResolver<Result, Parent, ContextType = Backend.GraphQL.GraphQLContext, Args = AbstractEntityDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export type ColumnDirectiveArgs = {   overrideType: Maybe<Scalars['String']>; };
+export type ColumnDirectiveArgs = {
+  overrideType: Maybe<Scalars['String']>;
+};
 
 export type ColumnDirectiveResolver<Result, Parent, ContextType = Backend.GraphQL.GraphQLContext, Args = ColumnDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type EmbeddedDirectiveArgs = {  };
-
-export type EmbeddedDirectiveResolver<Result, Parent, ContextType = Backend.GraphQL.GraphQLContext, Args = EmbeddedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export type EntityDirectiveArgs = {   embedded: Maybe<Scalars['Boolean']>;
-  additionalFields: Maybe<Array<Maybe<AdditionalEntityFields>>>; };
-
-export type EntityDirectiveResolver<Result, Parent, ContextType = Backend.GraphQL.GraphQLContext, Args = EntityDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export type IdDirectiveArgs = {  };
+export type IdDirectiveArgs = { };
 
 export type IdDirectiveResolver<Result, Parent, ContextType = Backend.GraphQL.GraphQLContext, Args = IdDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type LinkDirectiveArgs = {   overrideType: Maybe<Scalars['String']>; };
+export type LinkDirectiveArgs = {
+  overrideType: Maybe<Scalars['String']>;
+};
 
 export type LinkDirectiveResolver<Result, Parent, ContextType = Backend.GraphQL.GraphQLContext, Args = LinkDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type MapDirectiveArgs = {   path: Scalars['String']; };
+export type EmbeddedDirectiveArgs = { };
+
+export type EmbeddedDirectiveResolver<Result, Parent, ContextType = Backend.GraphQL.GraphQLContext, Args = EmbeddedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type MapDirectiveArgs = {
+  path: Scalars['String'];
+};
 
 export type MapDirectiveResolver<Result, Parent, ContextType = Backend.GraphQL.GraphQLContext, Args = MapDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type UnionDirectiveArgs = {   discriminatorField: Maybe<Scalars['String']>;
-  additionalFields: Maybe<Array<Maybe<AdditionalEntityFields>>>; };
+export type AbstractEntityDirectiveArgs = {
+  additionalFields: Maybe<Array<Maybe<AdditionalEntityFields>>>;
+  discriminatorField: Scalars['String'];
+};
+
+export type AbstractEntityDirectiveResolver<Result, Parent, ContextType = Backend.GraphQL.GraphQLContext, Args = AbstractEntityDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type EntityDirectiveArgs = {
+  additionalFields: Maybe<Array<Maybe<AdditionalEntityFields>>>;
+  embedded: Maybe<Scalars['Boolean']>;
+};
+
+export type EntityDirectiveResolver<Result, Parent, ContextType = Backend.GraphQL.GraphQLContext, Args = EntityDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type UnionDirectiveArgs = {
+  additionalFields: Maybe<Array<Maybe<AdditionalEntityFields>>>;
+  discriminatorField: Maybe<Scalars['String']>;
+};
 
 export type UnionDirectiveResolver<Result, Parent, ContextType = Backend.GraphQL.GraphQLContext, Args = UnionDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
@@ -237,26 +222,13 @@ export type Resolvers<ContextType = Backend.GraphQL.GraphQLContext> = {
   User: UserResolvers<ContextType>;
 };
 
-
-/**
- * @deprecated
- * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
- */
-export type IResolvers<ContextType = Backend.GraphQL.GraphQLContext> = Resolvers<ContextType>;
 export type DirectiveResolvers<ContextType = Backend.GraphQL.GraphQLContext> = {
-  abstractEntity: AbstractEntityDirectiveResolver<any, any, ContextType>;
   column: ColumnDirectiveResolver<any, any, ContextType>;
-  embedded: EmbeddedDirectiveResolver<any, any, ContextType>;
-  entity: EntityDirectiveResolver<any, any, ContextType>;
   id: IdDirectiveResolver<any, any, ContextType>;
   link: LinkDirectiveResolver<any, any, ContextType>;
+  embedded: EmbeddedDirectiveResolver<any, any, ContextType>;
   map: MapDirectiveResolver<any, any, ContextType>;
+  abstractEntity: AbstractEntityDirectiveResolver<any, any, ContextType>;
+  entity: EntityDirectiveResolver<any, any, ContextType>;
   union: UnionDirectiveResolver<any, any, ContextType>;
 };
-
-
-/**
- * @deprecated
- * Use "DirectiveResolvers" root object instead. If you wish to get "IDirectiveResolvers", add "typesPrefix: I" to your config.
- */
-export type IDirectiveResolvers<ContextType = Backend.GraphQL.GraphQLContext> = DirectiveResolvers<ContextType>;
