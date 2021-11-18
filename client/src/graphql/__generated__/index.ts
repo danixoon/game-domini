@@ -1,6 +1,5 @@
-import { GraphQLClient } from 'graphql-request';
-import * as Dom from 'graphql-request/dist/types.dom';
-import gql from 'graphql-tag';
+import { useMutation, UseMutationOptions, useQuery, UseQueryOptions } from 'react-query';
+import { fetcher } from '../fetcher';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -14,6 +13,7 @@ export type Scalars = {
   Int: number;
   Float: number;
   Date: number;
+  Void: any;
 };
 
 export type AdditionalEntityFields = {
@@ -38,13 +38,25 @@ export type MutationTestArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  test: What;
   user?: Maybe<User>;
+  users: Array<Maybe<User>>;
+};
+
+
+export type QueryUsersArgs = {
+  id: Scalars['ID'];
 };
 
 export type User = {
   __typename?: 'User';
   id: Scalars['ID'];
   username: Scalars['String'];
+};
+
+export type What = {
+  __typename?: 'What';
+  id: Scalars['String'];
 };
 
 export type TestVariables = Exact<{
@@ -54,39 +66,45 @@ export type TestVariables = Exact<{
 
 export type Test = { __typename?: 'Mutation', test: string };
 
-export type FetchUserVariables = Exact<{ [key: string]: never; }>;
+export type FetchUserVariables = Exact<{
+  id: Scalars['ID'];
+}>;
 
 
-export type FetchUser = { __typename?: 'Query', user?: { __typename?: 'User', id: string, username: string } | null | undefined };
+export type FetchUser = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, username: string } | null | undefined> };
 
 
-export const TestDocument = gql`
+export const TestDocument = `
     mutation test($username: String!) {
   test(input: $username)
 }
     `;
-export const FetchUserDocument = gql`
-    query fetchUser {
-  user {
+export const useTest = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<Test, TError, TestVariables, TContext>) =>
+    useMutation<Test, TError, TestVariables, TContext>(
+      'test',
+      (variables?: TestVariables) => fetcher<Test, TestVariables>(TestDocument, variables)(),
+      options
+    );
+export const FetchUserDocument = `
+    query fetchUser($id: ID!) {
+  users(id: $id) {
     id
     username
   }
 }
     `;
-
-export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
-
-
-const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
-
-export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
-  return {
-    test(variables: TestVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<Test> {
-      return withWrapper((wrappedRequestHeaders) => client.request<Test>(TestDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'test');
-    },
-    fetchUser(variables?: FetchUserVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FetchUser> {
-      return withWrapper((wrappedRequestHeaders) => client.request<FetchUser>(FetchUserDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'fetchUser');
-    }
-  };
-}
-export type Sdk = ReturnType<typeof getSdk>;
+export const useFetchUser = <
+      TData = FetchUser,
+      TError = unknown
+    >(
+      variables: FetchUserVariables,
+      options?: UseQueryOptions<FetchUser, TError, TData>
+    ) =>
+    useQuery<FetchUser, TError, TData>(
+      ['fetchUser', variables],
+      fetcher<FetchUser, FetchUserVariables>(FetchUserDocument, variables),
+      options
+    );

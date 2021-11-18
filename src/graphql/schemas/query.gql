@@ -1,6 +1,10 @@
-
+type What {
+  id: String!
+}
 
 type Query {
   # Возвращает данные об активном пользователе
   user: User
+  users(id: ID!): [User]!
+  test: What!
 }

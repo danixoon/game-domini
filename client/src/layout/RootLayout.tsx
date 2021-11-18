@@ -1,10 +1,13 @@
+import { useFetchUser } from "@generated";
+
 import React from "react";
-import { useQuery } from "react-query";
 
 const RootLayout: React.FC<{}> = (props) => {
-  // const query = useQuery("user", {  })
-  // const api = use
-  return <div>hi</div>;
+  const user = useFetchUser({ id: "12" });
+
+  // const name = ?.username;
+
+  return <div>{}</div>;
 };
 
 export default RootLayout;

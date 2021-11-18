@@ -10,4 +10,4 @@ export const createModel = <T>(name: string, schema: mongoose.Schema<T>) => {
 };
 
 export const createSchema = <T>(schema: Backend.DB.DbSchema<T>) =>
-  new mongoose.Schema<T>(schema);
+  new mongoose.Schema<T>(schema as any);

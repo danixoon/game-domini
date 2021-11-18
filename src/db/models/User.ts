@@ -3,15 +3,11 @@ import * as mongoose from "mongoose";
 import { createModel, createSchema } from "@backend/db/utils";
 const { Types } = mongoose.Schema;
 
-type UserSchema = any & {
-  password: string;
+type UserSchema = {
+  username: string;
 };
 
 const userSchema = createSchema<UserSchema>({
-  password: {
-    type: Types.String,
-    required: true,
-  },
   username: {
     type: Types.String,
     required: true,

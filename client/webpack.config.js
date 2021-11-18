@@ -55,8 +55,10 @@ module.exports = {
     }),
   ],
   devServer: {
-    contentBase: path.resolve(__dirname, "build"),
+    static: path.resolve(__dirname, "build"),
     compress: true,
+    // host: "0.0.0.0",
+    // firewall: false,
     port: 3000,
     historyApiFallback: true,
     proxy: {

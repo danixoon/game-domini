@@ -1,17 +1,20 @@
 type MongooseDocument = import("mongoose").Document;
 type MongooseSchema = import("mongoose").Schema;
-type SchemaDefinition = import("mongoose").SchemaDefinition;
-type ObjectID = import("mongodb").ObjectID;
+type SchemaDefinition<T> = import("mongoose").SchemaDefinition<T>;
+type SchemaDefinitionType<T> = import("mongoose").SchemaDefinitionType<T>;
+type ObjectId = import("mongodb").ObjectId;
 
 declare namespace Backend.DB {
   type WithoutMongoId<T> = Omit<T, "_id">;
 
   type DbSchema<K> = Record<
     Exclude<K, "_id">,
-    SchemaDefinition[keyof SchemaDefinition]
+    SchemaDefinition<SchemaDefinintionType<K>>[keyof SchemaDefinition<
+      SchemaDefinintionType<K>
+    >]
   >;
 
-  type ModelSchema<T = {}> = T & MongooseDocument & { id: ObjectID };
+  type ModelSchema<T = {}> = T & MongooseDocument & { id: ObjectId };
   type WithPopulated<
     T extends object,
     K extends keyof T,
@@ -19,7 +22,6 @@ declare namespace Backend.DB {
   > = ModelSchema<T> & Record<K, ModelSchema<P>>;
 
   interface CreateSchema {
-    
     <T, S extends SchemaDefinition = DbSchema<keyof T>>(
       schema: S
     ): MongooseSchema<S>;

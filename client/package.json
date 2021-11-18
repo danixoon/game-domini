@@ -5,7 +5,7 @@
   "author": "Daniil Bombenkov <danixoon@gmail.com>",
   "scripts": {
     "build": "yarn && NODE_ENV=production webpack",
-    "watch": "NODE_ENV=development webpack serve",
+    "watch": "NODE_ENV=development webpack serve --allowed-hosts all",
     "start": "node ./build/index.js"
   },
   "license": "MIT",

@@ -1,4 +1,4 @@
-import { ApiProvider } from "providers/ApiProvider";
+// import { ApiProvider } from "providers/ApiProvider";
 import * as React from "react";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { BrowserRouter as Router, Route } from "react-router-dom";
@@ -13,11 +13,11 @@ const queryClient = new QueryClient();
 const Root: React.FC<RootContainerProps> = (props) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <ApiProvider>
-        <Router>
-          <RootLayout />
-        </Router>
-      </ApiProvider>
+      {/* <ApiProvider> */}
+      <Router>
+        <RootLayout />
+      </Router>
+      {/* </ApiProvider> */}
     </QueryClientProvider>
   );
 };

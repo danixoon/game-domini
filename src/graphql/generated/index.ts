@@ -7,12 +7,13 @@ export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Mayb
 export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: ObjectID;
+  ID: ObjectId;
   String: string;
   Boolean: boolean;
   Int: number;
   Float: number;
   Date: Date;
+  Void: any;
 };
 
 export type AdditionalEntityFields = {
@@ -37,7 +38,14 @@ export type MutationTestArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  test: What;
   user: Maybe<User>;
+  users: Array<Maybe<User>>;
+};
+
+
+export type QueryUsersArgs = {
+  id: Scalars['ID'];
 };
 
 export type User = {
@@ -46,9 +54,15 @@ export type User = {
   username: Scalars['String'];
 };
 
+export type What = {
+  __typename?: 'What';
+  id: Scalars['String'];
+};
+
 import { ObjectID } from 'mongodb';
 export type UserDbObject = {
   _id: ObjectID,
+  username: string,
 };
 
 
@@ -128,6 +142,8 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   User: ResolverTypeWrapper<User>;
+  Void: ResolverTypeWrapper<Scalars['Void']>;
+  What: ResolverTypeWrapper<What>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
 
@@ -141,6 +157,8 @@ export type ResolversParentTypes = {
   Mutation: {};
   Query: {};
   User: User;
+  Void: Scalars['Void'];
+  What: What;
   Boolean: Scalars['Boolean'];
 };
 
@@ -205,12 +223,23 @@ export type MutationResolvers<ContextType = Backend.GraphQL.GraphQLContext, Pare
 };
 
 export type QueryResolvers<ContextType = Backend.GraphQL.GraphQLContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  test: Resolver<ResolversTypes['What'], ParentType, ContextType>;
   user: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  users: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType, RequireFields<QueryUsersArgs, 'id'>>;
 };
 
 export type UserResolvers<ContextType = Backend.GraphQL.GraphQLContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   username: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export interface VoidScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Void'], any> {
+  name: 'Void';
+}
+
+export type WhatResolvers<ContextType = Backend.GraphQL.GraphQLContext, ParentType extends ResolversParentTypes['What'] = ResolversParentTypes['What']> = {
+  id: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -220,6 +249,8 @@ export type Resolvers<ContextType = Backend.GraphQL.GraphQLContext> = {
   Mutation: MutationResolvers<ContextType>;
   Query: QueryResolvers<ContextType>;
   User: UserResolvers<ContextType>;
+  Void: GraphQLScalarType;
+  What: WhatResolvers<ContextType>;
 };
 
 export type DirectiveResolvers<ContextType = Backend.GraphQL.GraphQLContext> = {

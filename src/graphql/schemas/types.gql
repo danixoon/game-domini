@@ -1,8 +1,9 @@
+scalar Void
 scalar Date
 
 # Пользователь
 type User @entity {
   id: ID! @id
   # Имя пользователя
-  username: String!
+  username: String! @column
 }

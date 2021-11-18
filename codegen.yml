@@ -6,12 +6,12 @@ generates:
     plugins:
       - typescript
       - typescript-operations
-      - typescript-graphql-request
+      - typescript-react-query
     config:
       omitOperationSuffix: true
       scalars:
         Date: number
-      fetcher: fetcher
+      fetcher: ../fetcher#fetcher
 
   ./src/graphql/generated/index.ts:
     plugins:
@@ -23,11 +23,10 @@ generates:
       enumsAsString: false
       enumsAsTypes: true
       constEnums: true
-      federation: false
       scalars:
         Void: null
         Date: Date
-        ID: ObjectID
+        ID: ObjectId
       contextType: Backend.GraphQL.GraphQLContext
 require:
   - ts-node/register
