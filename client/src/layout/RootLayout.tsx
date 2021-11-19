@@ -1,11 +1,9 @@
-import { useFetchUser } from "@generated";
+import { useFetchPlayer } from "@generated";
 
 import React from "react";
 
 const RootLayout: React.FC<{}> = (props) => {
-  const user = useFetchUser({ id: "12" });
-
-  // const name = ?.username;
+  const player = useFetchPlayer({ id: "ok" });
 
   return <div>{}</div>;
 };

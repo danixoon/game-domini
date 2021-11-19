@@ -7,12 +7,7 @@ type ObjectId = import("mongodb").ObjectId;
 declare namespace Backend.DB {
   type WithoutMongoId<T> = Omit<T, "_id">;
 
-  type DbSchema<K> = Record<
-    Exclude<K, "_id">,
-    SchemaDefinition<SchemaDefinintionType<K>>[keyof SchemaDefinition<
-      SchemaDefinintionType<K>
-    >]
-  >;
+  type DbSchema<K> = WithoutMongoId<SchemaDefinition<K>>;
 
   type ModelSchema<T = {}> = T & MongooseDocument & { id: ObjectId };
   type WithPopulated<

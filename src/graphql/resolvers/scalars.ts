@@ -16,7 +16,7 @@ export default {
     parseLiteral(ast) {
       if (ast.kind === Kind.INT) {
         return new Date(parseInt(ast.value, 10));
-      }
+      } else if (ast.kind === Kind.STRING) return new Date(ast.value);
       return null;
     },
   }),

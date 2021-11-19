@@ -1,3 +1,5 @@
-mutation test($username: String!) {
-  test(input: $username)
+mutation sendGift($type: ResourceType!, $amount: Int!, $authorId: ID!, $targetId: ID!) {
+  gift {
+    send(payload: { resourceType: $type, amount: $amount, authorId: $authorId, targetId: $targetId }) { id }
+  }
 }

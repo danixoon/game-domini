@@ -21,6 +21,32 @@ export type AdditionalEntityFields = {
   type?: InputMaybe<Scalars['String']>;
 };
 
+export type Gift = {
+  __typename?: 'Gift';
+  amount: Scalars['Int'];
+  authorId: Scalars['ID'];
+  createdAt: Scalars['Date'];
+  id: Scalars['ID'];
+  resourceType: ResourceType;
+  targetId: Scalars['ID'];
+};
+
+export type GiftFilter = {
+  after?: InputMaybe<Scalars['Date']>;
+  authorIds?: InputMaybe<Array<Scalars['ID']>>;
+  before?: InputMaybe<Scalars['Date']>;
+};
+
+export type GiftMutation = {
+  __typename?: 'GiftMutation';
+  send: Gift;
+};
+
+
+export type GiftMutationSendArgs = {
+  payload: SendGiftPayload;
+};
+
 export type IdDbObject = {
   __typename?: 'IdDbObject';
   _id: Scalars['ID'];
@@ -28,83 +54,127 @@ export type IdDbObject = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  test: Scalars['String'];
+  gift?: Maybe<GiftMutation>;
 };
 
-
-export type MutationTestArgs = {
-  input: Scalars['String'];
+export type Player = {
+  __typename?: 'Player';
+  id: Scalars['ID'];
+  properties: Array<Property>;
+  resources: Array<Resource>;
+  username: Scalars['String'];
 };
+
+export type Property = {
+  __typename?: 'Property';
+  amount: Scalars['Int'];
+  propertyType: PropertyType;
+};
+
+export enum PropertyType {
+  Agility = 'AGILITY',
+  Luck = 'LUCK',
+  Stealth = 'STEALTH',
+  Strength = 'STRENGTH'
+}
 
 export type Query = {
   __typename?: 'Query';
-  test: What;
-  user?: Maybe<User>;
-  users: Array<Maybe<User>>;
+  gifts: Array<Gift>;
+  player?: Maybe<Player>;
+  players: Array<Player>;
+  resources: Array<Resource>;
 };
 
 
-export type QueryUsersArgs = {
+export type QueryGiftsArgs = {
+  filter: GiftFilter;
+};
+
+
+export type QueryPlayerArgs = {
   id: Scalars['ID'];
 };
 
-export type User = {
-  __typename?: 'User';
+
+export type QueryResourcesArgs = {
   id: Scalars['ID'];
-  username: Scalars['String'];
 };
 
-export type What = {
-  __typename?: 'What';
-  id: Scalars['String'];
+export type Resource = {
+  __typename?: 'Resource';
+  amount: Scalars['Int'];
+  playerId: Scalars['Int'];
+  resourceType: ResourceType;
 };
 
-export type TestVariables = Exact<{
-  username: Scalars['String'];
+export enum ResourceType {
+  Crystal = 'CRYSTAL',
+  Gold = 'GOLD'
+}
+
+export type SendGiftPayload = {
+  amount: Scalars['Int'];
+  authorId: Scalars['ID'];
+  resourceType: ResourceType;
+  targetId: Scalars['ID'];
+};
+
+export type SendGiftVariables = Exact<{
+  type: ResourceType;
+  amount: Scalars['Int'];
+  authorId: Scalars['ID'];
+  targetId: Scalars['ID'];
 }>;
 
 
-export type Test = { __typename?: 'Mutation', test: string };
+export type SendGift = { __typename?: 'Mutation', gift?: { __typename?: 'GiftMutation', send: { __typename?: 'Gift', id: string } } | null | undefined };
 
-export type FetchUserVariables = Exact<{
+export type FetchPlayerVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type FetchUser = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: string, username: string } | null | undefined> };
+export type FetchPlayer = { __typename?: 'Query', player?: { __typename?: 'Player', id: string, username: string } | null | undefined };
 
 
-export const TestDocument = `
-    mutation test($username: String!) {
-  test(input: $username)
+export const SendGiftDocument = `
+    mutation sendGift($type: ResourceType!, $amount: Int!, $authorId: ID!, $targetId: ID!) {
+  gift {
+    send(
+      payload: {resourceType: $type, amount: $amount, authorId: $authorId, targetId: $targetId}
+    ) {
+      id
+    }
+  }
 }
     `;
-export const useTest = <
+export const useSendGift = <
       TError = unknown,
       TContext = unknown
-    >(options?: UseMutationOptions<Test, TError, TestVariables, TContext>) =>
-    useMutation<Test, TError, TestVariables, TContext>(
-      'test',
-      (variables?: TestVariables) => fetcher<Test, TestVariables>(TestDocument, variables)(),
+    >(options?: UseMutationOptions<SendGift, TError, SendGiftVariables, TContext>) =>
+    useMutation<SendGift, TError, SendGiftVariables, TContext>(
+      'sendGift',
+      (variables?: SendGiftVariables) => fetcher<SendGift, SendGiftVariables>(SendGiftDocument, variables)(),
       options
     );
-export const FetchUserDocument = `
-    query fetchUser($id: ID!) {
-  users(id: $id) {
+export const FetchPlayerDocument = `
+    query fetchPlayer($id: ID!) {
+  player(id: $id) {
     id
     username
   }
 }
     `;
-export const useFetchUser = <
-      TData = FetchUser,
+export const useFetchPlayer = <
+      TData = FetchPlayer,
       TError = unknown
     >(
-      variables: FetchUserVariables,
-      options?: UseQueryOptions<FetchUser, TError, TData>
+      variables: FetchPlayerVariables,
+      options?: UseQueryOptions<FetchPlayer, TError, TData>
     ) =>
-    useQuery<FetchUser, TError, TData>(
-      ['fetchUser', variables],
-      fetcher<FetchUser, FetchUserVariables>(FetchUserDocument, variables),
+    useQuery<FetchPlayer, TError, TData>(
+      ['fetchPlayer', variables],
+      fetcher<FetchPlayer, FetchPlayerVariables>(FetchPlayerDocument, variables),
       options
     );

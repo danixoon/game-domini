@@ -1,9 +1,49 @@
 scalar Void
 scalar Date
 
-# Пользователь
-type User @entity {
+enum ResourceType {
+  GOLD
+  CRYSTAL
+}
+
+enum PropertyType {
+  STRENGTH
+  STEALTH
+  AGILITY
+  LUCK
+}
+
+# Подарок
+type Gift @entity {
   id: ID! @id
-  # Имя пользователя
+  resourceType: ResourceType! @column
+  targetId: ID! @link
+  authorId: ID! @link
+  amount: Int! @column
+
+  createdAt: Date! @column
+}
+
+# Игрок
+type Player @entity {
+  id: ID! @id
   username: String! @column
+
+  properties: [Property!]! @embedded
+  resources: [Resource!]! @embedded
+  gifts: [Gift!]! @embedded
+}
+
+# Свойство
+type Property {
+  propertyType: PropertyType!
+  amount: Int!
+}
+
+# Ресурс
+type Resource @entity(embedded: true) {
+  resourceType: ResourceType! @column
+  amount: Int! @column
+
+  playerId: Int! @link
 }

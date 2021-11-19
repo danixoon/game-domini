@@ -1,5 +1,5 @@
-query fetchUser($id: ID!) {
-  users(id: $id) {
+query fetchPlayer($id: ID!) {
+  player(id: $id) {
     id
     username
   }

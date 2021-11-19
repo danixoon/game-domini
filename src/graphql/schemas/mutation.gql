@@ -1,5 +1,16 @@
+input SendGiftPayload {
+  targetId: ID!
+  authorId: ID!
+  resourceType: ResourceType!
+  amount: Int!
+}
+
+type GiftMutation {
+  # Отправка подарков
+  send(payload: SendGiftPayload!): Gift!
+}
 
 type Mutation {
-  # Тест
-  test(input: String!): String!
+  # Мутации подарков
+  gift: GiftMutation
 }

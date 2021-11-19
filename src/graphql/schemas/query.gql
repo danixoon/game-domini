@@ -1,10 +1,12 @@
-type What {
-  id: String!
+input GiftFilter {
+  after: Date
+  before: Date
+  authorIds: [ID!]
 }
 
 type Query {
-  # Возвращает данные об активном пользователе
-  user: User
-  users(id: ID!): [User]!
-  test: What!
+  players: [Player!]!
+  player(id: ID!): Player
+  gifts(filter: GiftFilter!): [Gift!]!
+  resources(id: ID!): [Resource!]!
 }
