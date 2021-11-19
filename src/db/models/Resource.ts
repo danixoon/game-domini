@@ -6,6 +6,7 @@ const { Types } = mongoose.Schema;
 const resourceSchema = createSchema<ResourceDbObject>({
   amount: {
     type: Types.Number,
+    min: 0,
     required: true,
   },
   playerId: {
@@ -14,6 +15,7 @@ const resourceSchema = createSchema<ResourceDbObject>({
     required: true,
   },
   resourceType: {
+    
     type: Types.String,
     required: true,
   },

@@ -1,10 +1,11 @@
 import scalars from "./scalars";
-import { Resolvers } from "../generated";
+import { Player, Resolvers } from "../generated";
 import {
   GiftModel,
   PlayerModel,
   ResourceModel,
 } from "@backend/db/models/index";
+import { sendGift } from "@backend/db/queries";
 
 const mergeItems = <T, K>(
   getKey: (item: T) => string,
@@ -65,35 +66,7 @@ const resolver: Partial<Resolvers> = {
       _,
       { payload: { amount, authorId, targetId, resourceType } }
     ) => {
-      const target = await PlayerModel.findById(targetId);
-      if (!target) throw new Error("Целевого игрока не существует");
-
-      const author = await PlayerModel.findById(authorId).populate("resources");
-      if (!author) throw new Error("Отправителя-игрока не существует");
-
-      const timeOffset = Date.now() - 24 * 60 * 60 * 1010;
-      const giftAmount = await GiftModel.find({
-        createdAt: { $gte: new Date(timeOffset) },
-      })
-        .count()
-        .exec();
-
-      if (giftAmount >= 10)
-        throw new Error("Достигнуто максимальное количество подарков");
-
-      const targetResource = author.resources.find(
-        (res) => res.resourceType === resourceType
-      );
-      if (!targetResource || targetResource.amount <= amount)
-        throw new Error("У вас недостаточно ресурса для подарка");
-
-      const gift = await GiftModel.create({
-        amount,
-        authorId,
-        targetId,
-        resourceType,
-      });
-
+      const [gift] = await sendGift([targetId], authorId, resourceType, amount);
       return gift;
     },
   },

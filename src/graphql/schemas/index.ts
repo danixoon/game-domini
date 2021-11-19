@@ -2,7 +2,7 @@ import path from "path";
 import { DocumentNode } from "graphql";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { enchanceDirectives } from "@backend/graphql/directives";
-import { DIRECTIVES, addToSchema } from "@graphql-codegen/typescript-mongodb";
+
 import { loadTypedefsSync } from "@graphql-tools/load";
 import { mergeTypeDefs } from "@graphql-tools/merge";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";

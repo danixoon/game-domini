@@ -1,13 +1,17 @@
 import * as mongoose from "mongoose";
-import { Player, PlayerDbObject, Property } from "@backend/graphql/generated";
+import {
+  Player,
+  PlayerDbObject,
+  ResourceType,
+  Scalars,
+} from "@backend/graphql/generated";
 import { createModel, createSchema } from "@backend/db/utils";
 import { ResourceModel } from "./Resource";
 const { Types } = mongoose.Schema;
 
-export const propertySchema = createSchema<Property>({
-  amount: { type: Types.Number },
-  propertyType: { type: Types.String },
-});
+export const defaultProperties: Partial<Scalars["Property"]> = {
+  LUCK: 100,
+};
 
 const playerSchema = createSchema<PlayerDbObject>({
   username: {
@@ -15,11 +19,21 @@ const playerSchema = createSchema<PlayerDbObject>({
     required: true,
     unique: true,
   },
-  properties: [
-    {
-      type: propertySchema,
-    },
-  ],
+  properties: {
+    type: Types.Mixed,
+    default: defaultProperties,
+  },
+});
+
+playerSchema.pre("save", async function (err) {
+  const avaliableResources: ResourceType[] = ["CRYSTAL", "GOLD"];
+  const created = await ResourceModel.create(
+    avaliableResources.map((type) => ({
+      resourceType: type,
+      amount: 0,
+      playerId: this.id,
+    }))
+  );
 });
 
 playerSchema.virtual("resources", {

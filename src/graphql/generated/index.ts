@@ -13,6 +13,7 @@ export type Scalars = {
   Int: number;
   Float: number;
   Date: Date;
+  Property: Record<PropertyType, any>;
   Void: any;
 };
 
@@ -23,18 +24,17 @@ export type AdditionalEntityFields = {
 
 export type Gift = {
   __typename?: 'Gift';
-  amount: Scalars['Int'];
-  authorId: Scalars['ID'];
-  createdAt: Scalars['Date'];
-  id: Scalars['ID'];
   resourceType: ResourceType;
   targetId: Scalars['ID'];
+  authorId: Scalars['ID'];
+  amount: Scalars['Int'];
+  createdAt: Scalars['Date'];
 };
 
 export type GiftFilter = {
   after?: InputMaybe<Scalars['Date']>;
-  authorIds?: InputMaybe<Array<Scalars['ID']>>;
   before?: InputMaybe<Scalars['Date']>;
+  authorIds?: InputMaybe<Array<Scalars['ID']>>;
 };
 
 export type GiftMutation = {
@@ -60,39 +60,34 @@ export type Mutation = {
 export type Player = {
   __typename?: 'Player';
   id: Scalars['ID'];
-  properties: Array<Property>;
-  resources: Array<Resource>;
   username: Scalars['String'];
-};
-
-export type Property = {
-  __typename?: 'Property';
-  amount: Scalars['Int'];
-  propertyType: PropertyType;
+  properties: Scalars['Property'];
+  resources: Array<Resource>;
+  gifts: Array<Gift>;
 };
 
 export type PropertyType =
-  | 'AGILITY'
-  | 'LUCK'
+  | 'STRENGTH'
   | 'STEALTH'
-  | 'STRENGTH';
+  | 'AGILITY'
+  | 'LUCK';
 
 export type Query = {
   __typename?: 'Query';
-  gifts: Array<Gift>;
-  player?: Maybe<Player>;
   players: Array<Player>;
+  player?: Maybe<Player>;
+  gifts: Array<Gift>;
   resources: Array<Resource>;
-};
-
-
-export type QueryGiftsArgs = {
-  filter: GiftFilter;
 };
 
 
 export type QueryPlayerArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryGiftsArgs = {
+  filter: GiftFilter;
 };
 
 
@@ -102,43 +97,43 @@ export type QueryResourcesArgs = {
 
 export type Resource = {
   __typename?: 'Resource';
-  amount: Scalars['Int'];
-  playerId: Scalars['Int'];
   resourceType: ResourceType;
+  amount: Scalars['Int'];
+  playerId: Scalars['ID'];
 };
 
 export type ResourceType =
-  | 'CRYSTAL'
-  | 'GOLD';
+  | 'GOLD'
+  | 'CRYSTAL';
 
 export type SendGiftPayload = {
-  amount: Scalars['Int'];
+  targetId: Scalars['ID'];
   authorId: Scalars['ID'];
   resourceType: ResourceType;
-  targetId: Scalars['ID'];
+  amount: Scalars['Int'];
 };
 
 import { ObjectID } from 'mongodb';
 export type GiftDbObject = {
-  amount: number,
-  authorId: IdDbObject['_id'],
-  createdAt: Date,
-  _id: ObjectID,
   resourceType: ResourceType,
   targetId: IdDbObject['_id'],
+  authorId: IdDbObject['_id'],
+  amount: number,
+  createdAt: Date,
 };
 
 export type PlayerDbObject = {
   _id: ObjectID,
-  properties: Array<PropertyDbObject>,
-  resources: Array<ResourceDbObject>,
   username: string,
+  properties: PropertyDbObject,
+  resources: Array<ResourceDbObject>,
+  gifts: Array<GiftDbObject>,
 };
 
 export type ResourceDbObject = {
-  amount: number,
-  playerId: IntDbObject['_id'],
   resourceType: ResourceType,
+  amount: number,
+  playerId: IdDbObject['_id'],
 };
 
 
@@ -214,14 +209,14 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars['String']>;
   Date: ResolverTypeWrapper<Scalars['Date']>;
   Gift: ResolverTypeWrapper<Gift>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
   GiftFilter: GiftFilter;
   GiftMutation: ResolverTypeWrapper<GiftMutation>;
   IdDbObject: ResolverTypeWrapper<IdDbObject>;
   Mutation: ResolverTypeWrapper<{}>;
   Player: ResolverTypeWrapper<Player>;
-  Property: ResolverTypeWrapper<Property>;
+  Property: ResolverTypeWrapper<Scalars['Property']>;
   PropertyType: PropertyType;
   Query: ResolverTypeWrapper<{}>;
   Resource: ResolverTypeWrapper<Resource>;
@@ -237,14 +232,14 @@ export type ResolversParentTypes = {
   String: Scalars['String'];
   Date: Scalars['Date'];
   Gift: Gift;
-  Int: Scalars['Int'];
   ID: Scalars['ID'];
+  Int: Scalars['Int'];
   GiftFilter: GiftFilter;
   GiftMutation: GiftMutation;
   IdDbObject: IdDbObject;
   Mutation: {};
   Player: Player;
-  Property: Property;
+  Property: Scalars['Property'];
   Query: {};
   Resource: Resource;
   SendGiftPayload: SendGiftPayload;
@@ -252,11 +247,29 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean'];
 };
 
+export type AbstractEntityDirectiveArgs = {
+  discriminatorField: Scalars['String'];
+  additionalFields?: Maybe<Array<Maybe<AdditionalEntityFields>>>;
+};
+
+export type AbstractEntityDirectiveResolver<Result, Parent, ContextType = Backend.GraphQL.GraphQLContext, Args = AbstractEntityDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
 export type ColumnDirectiveArgs = {
   overrideType?: Maybe<Scalars['String']>;
 };
 
 export type ColumnDirectiveResolver<Result, Parent, ContextType = Backend.GraphQL.GraphQLContext, Args = ColumnDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type EmbeddedDirectiveArgs = { };
+
+export type EmbeddedDirectiveResolver<Result, Parent, ContextType = Backend.GraphQL.GraphQLContext, Args = EmbeddedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type EntityDirectiveArgs = {
+  embedded?: Maybe<Scalars['Boolean']>;
+  additionalFields?: Maybe<Array<Maybe<AdditionalEntityFields>>>;
+};
+
+export type EntityDirectiveResolver<Result, Parent, ContextType = Backend.GraphQL.GraphQLContext, Args = EntityDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type IdDirectiveArgs = { };
 
@@ -268,33 +281,15 @@ export type LinkDirectiveArgs = {
 
 export type LinkDirectiveResolver<Result, Parent, ContextType = Backend.GraphQL.GraphQLContext, Args = LinkDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type EmbeddedDirectiveArgs = { };
-
-export type EmbeddedDirectiveResolver<Result, Parent, ContextType = Backend.GraphQL.GraphQLContext, Args = EmbeddedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
 export type MapDirectiveArgs = {
   path: Scalars['String'];
 };
 
 export type MapDirectiveResolver<Result, Parent, ContextType = Backend.GraphQL.GraphQLContext, Args = MapDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
-export type AbstractEntityDirectiveArgs = {
-  additionalFields?: Maybe<Array<Maybe<AdditionalEntityFields>>>;
-  discriminatorField: Scalars['String'];
-};
-
-export type AbstractEntityDirectiveResolver<Result, Parent, ContextType = Backend.GraphQL.GraphQLContext, Args = AbstractEntityDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export type EntityDirectiveArgs = {
-  additionalFields?: Maybe<Array<Maybe<AdditionalEntityFields>>>;
-  embedded?: Maybe<Scalars['Boolean']>;
-};
-
-export type EntityDirectiveResolver<Result, Parent, ContextType = Backend.GraphQL.GraphQLContext, Args = EntityDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
 export type UnionDirectiveArgs = {
-  additionalFields?: Maybe<Array<Maybe<AdditionalEntityFields>>>;
   discriminatorField?: Maybe<Scalars['String']>;
+  additionalFields?: Maybe<Array<Maybe<AdditionalEntityFields>>>;
 };
 
 export type UnionDirectiveResolver<Result, Parent, ContextType = Backend.GraphQL.GraphQLContext, Args = UnionDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
@@ -304,12 +299,11 @@ export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 }
 
 export type GiftResolvers<ContextType = Backend.GraphQL.GraphQLContext, ParentType extends ResolversParentTypes['Gift'] = ResolversParentTypes['Gift']> = {
-  amount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  authorId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   resourceType?: Resolver<ResolversTypes['ResourceType'], ParentType, ContextType>;
   targetId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  authorId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  amount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -329,29 +323,28 @@ export type MutationResolvers<ContextType = Backend.GraphQL.GraphQLContext, Pare
 
 export type PlayerResolvers<ContextType = Backend.GraphQL.GraphQLContext, ParentType extends ResolversParentTypes['Player'] = ResolversParentTypes['Player']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  properties?: Resolver<Array<ResolversTypes['Property']>, ParentType, ContextType>;
-  resources?: Resolver<Array<ResolversTypes['Resource']>, ParentType, ContextType>;
   username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  properties?: Resolver<ResolversTypes['Property'], ParentType, ContextType>;
+  resources?: Resolver<Array<ResolversTypes['Resource']>, ParentType, ContextType>;
+  gifts?: Resolver<Array<ResolversTypes['Gift']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type PropertyResolvers<ContextType = Backend.GraphQL.GraphQLContext, ParentType extends ResolversParentTypes['Property'] = ResolversParentTypes['Property']> = {
-  amount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  propertyType?: Resolver<ResolversTypes['PropertyType'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
+export interface PropertyScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Property'], any> {
+  name: 'Property';
+}
 
 export type QueryResolvers<ContextType = Backend.GraphQL.GraphQLContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  gifts?: Resolver<Array<ResolversTypes['Gift']>, ParentType, ContextType, RequireFields<QueryGiftsArgs, 'filter'>>;
-  player?: Resolver<Maybe<ResolversTypes['Player']>, ParentType, ContextType, RequireFields<QueryPlayerArgs, 'id'>>;
   players?: Resolver<Array<ResolversTypes['Player']>, ParentType, ContextType>;
+  player?: Resolver<Maybe<ResolversTypes['Player']>, ParentType, ContextType, RequireFields<QueryPlayerArgs, 'id'>>;
+  gifts?: Resolver<Array<ResolversTypes['Gift']>, ParentType, ContextType, RequireFields<QueryGiftsArgs, 'filter'>>;
   resources?: Resolver<Array<ResolversTypes['Resource']>, ParentType, ContextType, RequireFields<QueryResourcesArgs, 'id'>>;
 };
 
 export type ResourceResolvers<ContextType = Backend.GraphQL.GraphQLContext, ParentType extends ResolversParentTypes['Resource'] = ResolversParentTypes['Resource']> = {
-  amount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  playerId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   resourceType?: Resolver<ResolversTypes['ResourceType'], ParentType, ContextType>;
+  amount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  playerId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -366,19 +359,19 @@ export type Resolvers<ContextType = Backend.GraphQL.GraphQLContext> = {
   IdDbObject?: IdDbObjectResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Player?: PlayerResolvers<ContextType>;
-  Property?: PropertyResolvers<ContextType>;
+  Property?: GraphQLScalarType;
   Query?: QueryResolvers<ContextType>;
   Resource?: ResourceResolvers<ContextType>;
   Void?: GraphQLScalarType;
 };
 
 export type DirectiveResolvers<ContextType = Backend.GraphQL.GraphQLContext> = {
+  abstractEntity?: AbstractEntityDirectiveResolver<any, any, ContextType>;
   column?: ColumnDirectiveResolver<any, any, ContextType>;
+  embedded?: EmbeddedDirectiveResolver<any, any, ContextType>;
+  entity?: EntityDirectiveResolver<any, any, ContextType>;
   id?: IdDirectiveResolver<any, any, ContextType>;
   link?: LinkDirectiveResolver<any, any, ContextType>;
-  embedded?: EmbeddedDirectiveResolver<any, any, ContextType>;
   map?: MapDirectiveResolver<any, any, ContextType>;
-  abstractEntity?: AbstractEntityDirectiveResolver<any, any, ContextType>;
-  entity?: EntityDirectiveResolver<any, any, ContextType>;
   union?: UnionDirectiveResolver<any, any, ContextType>;
 };

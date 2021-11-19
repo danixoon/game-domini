@@ -26,6 +26,7 @@ generates:
         Void: null
         Date: Date
         ID: ObjectID
+        Property: Record<PropertyType, any>
       contextType: Backend.GraphQL.GraphQLContext
 require:
   - ts-node/register

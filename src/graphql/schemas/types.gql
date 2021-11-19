@@ -1,5 +1,6 @@
 scalar Void
 scalar Date
+scalar Property
 
 enum ResourceType {
   GOLD
@@ -15,7 +16,6 @@ enum PropertyType {
 
 # Подарок
 type Gift @entity {
-  id: ID! @id
   resourceType: ResourceType! @column
   targetId: ID! @link
   authorId: ID! @link
@@ -29,21 +29,21 @@ type Player @entity {
   id: ID! @id
   username: String! @column
 
-  properties: [Property!]! @embedded
+  properties: Property! @embedded
   resources: [Resource!]! @embedded
   gifts: [Gift!]! @embedded
 }
 
 # Свойство
-type Property {
-  propertyType: PropertyType!
-  amount: Int!
-}
+# type Property {
+#   propertyType: PropertyType!
+#   amount: Int!
+# }
 
 # Ресурс
 type Resource @entity(embedded: true) {
   resourceType: ResourceType! @column
   amount: Int! @column
 
-  playerId: Int! @link
+  playerId: ID! @link
 }

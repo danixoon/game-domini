@@ -13,6 +13,7 @@ export type Scalars = {
   Int: number;
   Float: number;
   Date: number;
+  Property: any;
   Void: any;
 };
 
@@ -23,18 +24,17 @@ export type AdditionalEntityFields = {
 
 export type Gift = {
   __typename?: 'Gift';
-  amount: Scalars['Int'];
-  authorId: Scalars['ID'];
-  createdAt: Scalars['Date'];
-  id: Scalars['ID'];
   resourceType: ResourceType;
   targetId: Scalars['ID'];
+  authorId: Scalars['ID'];
+  amount: Scalars['Int'];
+  createdAt: Scalars['Date'];
 };
 
 export type GiftFilter = {
   after?: InputMaybe<Scalars['Date']>;
-  authorIds?: InputMaybe<Array<Scalars['ID']>>;
   before?: InputMaybe<Scalars['Date']>;
+  authorIds?: InputMaybe<Array<Scalars['ID']>>;
 };
 
 export type GiftMutation = {
@@ -60,40 +60,35 @@ export type Mutation = {
 export type Player = {
   __typename?: 'Player';
   id: Scalars['ID'];
-  properties: Array<Property>;
-  resources: Array<Resource>;
   username: Scalars['String'];
-};
-
-export type Property = {
-  __typename?: 'Property';
-  amount: Scalars['Int'];
-  propertyType: PropertyType;
+  properties: Scalars['Property'];
+  resources: Array<Resource>;
+  gifts: Array<Gift>;
 };
 
 export enum PropertyType {
-  Agility = 'AGILITY',
-  Luck = 'LUCK',
+  Strength = 'STRENGTH',
   Stealth = 'STEALTH',
-  Strength = 'STRENGTH'
+  Agility = 'AGILITY',
+  Luck = 'LUCK'
 }
 
 export type Query = {
   __typename?: 'Query';
-  gifts: Array<Gift>;
-  player?: Maybe<Player>;
   players: Array<Player>;
+  player?: Maybe<Player>;
+  gifts: Array<Gift>;
   resources: Array<Resource>;
-};
-
-
-export type QueryGiftsArgs = {
-  filter: GiftFilter;
 };
 
 
 export type QueryPlayerArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryGiftsArgs = {
+  filter: GiftFilter;
 };
 
 
@@ -103,21 +98,21 @@ export type QueryResourcesArgs = {
 
 export type Resource = {
   __typename?: 'Resource';
-  amount: Scalars['Int'];
-  playerId: Scalars['Int'];
   resourceType: ResourceType;
+  amount: Scalars['Int'];
+  playerId: Scalars['ID'];
 };
 
 export enum ResourceType {
-  Crystal = 'CRYSTAL',
-  Gold = 'GOLD'
+  Gold = 'GOLD',
+  Crystal = 'CRYSTAL'
 }
 
 export type SendGiftPayload = {
-  amount: Scalars['Int'];
+  targetId: Scalars['ID'];
   authorId: Scalars['ID'];
   resourceType: ResourceType;
-  targetId: Scalars['ID'];
+  amount: Scalars['Int'];
 };
 
 export type SendGiftVariables = Exact<{
@@ -128,7 +123,7 @@ export type SendGiftVariables = Exact<{
 }>;
 
 
-export type SendGift = { __typename?: 'Mutation', gift?: { __typename?: 'GiftMutation', send: { __typename?: 'Gift', id: string } } | null | undefined };
+export type SendGift = { __typename?: 'Mutation', gift?: { __typename?: 'GiftMutation', send: { __typename?: 'Gift', amount: number } } | null | undefined };
 
 export type FetchPlayerVariables = Exact<{
   id: Scalars['ID'];
@@ -144,7 +139,7 @@ export const SendGiftDocument = `
     send(
       payload: {resourceType: $type, amount: $amount, authorId: $authorId, targetId: $targetId}
     ) {
-      id
+      amount
     }
   }
 }
