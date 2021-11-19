@@ -132,6 +132,13 @@ export type FetchPlayerVariables = Exact<{
 
 export type FetchPlayer = { __typename?: 'Query', player?: { __typename?: 'Player', id: string, username: string } | null | undefined };
 
+export type FetchResourcesVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type FetchResources = { __typename?: 'Query', resources: Array<{ __typename?: 'Resource', resourceType: ResourceType, amount: number }> };
+
 
 export const SendGiftDocument = `
     mutation sendGift($type: ResourceType!, $amount: Int!, $authorId: ID!, $targetId: ID!) {
@@ -171,5 +178,25 @@ export const useFetchPlayer = <
     useQuery<FetchPlayer, TError, TData>(
       ['fetchPlayer', variables],
       fetcher<FetchPlayer, FetchPlayerVariables>(FetchPlayerDocument, variables),
+      options
+    );
+export const FetchResourcesDocument = `
+    query fetchResources($id: ID!) {
+  resources(id: $id) {
+    resourceType
+    amount
+  }
+}
+    `;
+export const useFetchResources = <
+      TData = FetchResources,
+      TError = unknown
+    >(
+      variables: FetchResourcesVariables,
+      options?: UseQueryOptions<FetchResources, TError, TData>
+    ) =>
+    useQuery<FetchResources, TError, TData>(
+      ['fetchResources', variables],
+      fetcher<FetchResources, FetchResourcesVariables>(FetchResourcesDocument, variables),
       options
     );

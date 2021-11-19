@@ -13,11 +13,9 @@ const queryClient = new QueryClient();
 const Root: React.FC<RootContainerProps> = (props) => {
   return (
     <QueryClientProvider client={queryClient}>
-      {/* <ApiProvider> */}
       <Router>
         <RootLayout />
       </Router>
-      {/* </ApiProvider> */}
     </QueryClientProvider>
   );
 };

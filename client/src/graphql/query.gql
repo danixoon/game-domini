@@ -4,3 +4,10 @@ query fetchPlayer($id: ID!) {
     username
   }
 }
+
+query fetchResources($id: ID!) {
+  resources(id: $id) {
+    resourceType
+    amount
+  }
+}

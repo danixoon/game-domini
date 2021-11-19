@@ -22,7 +22,7 @@ declare type OverrideProps<F, T> = Omit<F, keyof T> & T;
 
 declare type WithHookOnChange = {
   onChange: (e: {
-    target: { name: string; type?: string; value: any };
+    target: { name: string; type?: string; value: any } & any;
   }) => void;
 };
 

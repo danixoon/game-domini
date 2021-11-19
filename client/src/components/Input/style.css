@@ -1,0 +1,8 @@
+.input {
+  padding: 0.25rem;
+  border: solid 1px #eee;
+  border-radius: 5px;
+  margin: 5px;
+
+  flex: 1;
+}
