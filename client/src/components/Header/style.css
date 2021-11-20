@@ -1,0 +1,16 @@
+.header {
+  /* padding: 0.25rem; */
+  /* border: solid 1px #eee; */
+  /* border-radius: 5px; */
+  /* margin: 5px; */
+
+  /* flex: 1; */
+  display: flex;
+  flex-flow: column;
+}
+
+.header__label {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5rem;
+  text-align: center;
+}

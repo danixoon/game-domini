@@ -5,9 +5,35 @@ query fetchPlayer($id: ID!) {
   }
 }
 
+query fetchPlayers {
+  players {
+    id
+    username
+  }
+}
+
 query fetchResources($id: ID!) {
   resources(id: $id) {
     resourceType
     amount
+  }
+}
+query fetchGifts($id: ID!) {
+  gifts(filter: { targetIds: [$id] }) {
+    resourceType
+    amount
+    createdAt
+    authorId
+    targetId
+  }
+}
+
+query fetchLatestGifts {
+  latestGifts {
+    resourceType
+    amount
+    createdAt
+    authorId
+    targetId
   }
 }

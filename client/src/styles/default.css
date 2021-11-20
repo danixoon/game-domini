@@ -1,6 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap");
+
 html {
   padding: 0;
   margin: 0;
+  font-family: "Roboto", sans-serif;
 }
 
 ul {
@@ -31,8 +34,17 @@ section {
   display: block;
 }
 
-.amount {
-  display: block;
-  margin-left: auto;
-  font-weight: bold;
+label {
+  display: flex;
+  margin: 0.5rem;
+}
+
+select {
+  flex: 1;
+  margin-left: 0.5rem;
+}
+
+.selected {
+  background-color: rgb(250, 75, 75);
+  /* border: 2px solid rgb(250, 75, 75); */
 }

@@ -87,11 +87,16 @@ export const buffByProperty = async (
 
 const giftQueue = new PQueue({ concurrency: 1, autoStart: true });
 export const sendGift = (
-  targetIds: number[],
-  authorId: number,
+  targetIds: string[],
+  authorId: string,
   resourceType: ResourceType,
   amount: number
 ) => {
+  if (targetIds.includes(authorId))
+    throw new Error("Невозможно отправить подарок самому себе.");
+  if (amount <= 0)
+    throw new Error("Указано некорректное количество ресурса подарка.");
+
   const send = async () => {
     const targets = await PlayerModel.find({ _id: { $in: targetIds } });
 
@@ -101,7 +106,7 @@ export const sendGift = (
     const author = await PlayerModel.findById(authorId).populate("resources");
     if (!author) throw new Error("Отправителя-игрока не существует");
 
-    const timeOffset = Date.now() - 24 * 60 * 60 * 1010;
+    const timeOffset = new Date().getUTCMilliseconds() - 24 * 60 * 60 * 1000;
     const giftAmount = await GiftModel.find({
       createdAt: { $gte: new Date(timeOffset) },
       authorId,

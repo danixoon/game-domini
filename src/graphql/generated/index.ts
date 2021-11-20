@@ -35,6 +35,7 @@ export type GiftFilter = {
   after?: InputMaybe<Scalars['Date']>;
   before?: InputMaybe<Scalars['Date']>;
   authorIds?: InputMaybe<Array<Scalars['ID']>>;
+  targetIds?: InputMaybe<Array<Scalars['ID']>>;
 };
 
 export type GiftMutation = {
@@ -77,6 +78,7 @@ export type Query = {
   players: Array<Player>;
   player?: Maybe<Player>;
   gifts: Array<Gift>;
+  latestGifts: Array<Gift>;
   resources: Array<Resource>;
 };
 
@@ -338,6 +340,7 @@ export type QueryResolvers<ContextType = Backend.GraphQL.GraphQLContext, ParentT
   players?: Resolver<Array<ResolversTypes['Player']>, ParentType, ContextType>;
   player?: Resolver<Maybe<ResolversTypes['Player']>, ParentType, ContextType, RequireFields<QueryPlayerArgs, 'id'>>;
   gifts?: Resolver<Array<ResolversTypes['Gift']>, ParentType, ContextType, RequireFields<QueryGiftsArgs, 'filter'>>;
+  latestGifts?: Resolver<Array<ResolversTypes['Gift']>, ParentType, ContextType>;
   resources?: Resolver<Array<ResolversTypes['Resource']>, ParentType, ContextType, RequireFields<QueryResourcesArgs, 'id'>>;
 };
 

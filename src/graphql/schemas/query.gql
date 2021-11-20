@@ -2,11 +2,13 @@ input GiftFilter {
   after: Date
   before: Date
   authorIds: [ID!]
+  targetIds: [ID!]
 }
 
 type Query {
   players: [Player!]!
   player(id: ID!): Player
   gifts(filter: GiftFilter!): [Gift!]!
+  latestGifts: [Gift!]!
   resources(id: ID!): [Resource!]!
 }

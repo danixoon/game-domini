@@ -8,6 +8,7 @@ import { mergeTypeDefs } from "@graphql-tools/merge";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import gql from "graphql-tag";
 import { inspect } from "util";
+import { DIRECTIVES } from "@graphql-codegen/typescript-mongodb";
 
 export const schemaWithResolvers = async () =>
   makeExecutableSchema({
@@ -27,7 +28,7 @@ const typeDefs = loadTypedefsSync(path.join(__dirname, "./**/*.gql"), {
 // });
 
 export const schemaDef = {
-  typeDefs: [...typeDefs],
+  typeDefs: [DIRECTIVES, ...typeDefs],
 };
 
 // console.log(inspect(DIRECTIVES, true, 5));

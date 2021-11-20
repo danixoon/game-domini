@@ -49,13 +49,20 @@ const resolver: Partial<Resolvers> = {
       return totalResources;
     },
     player: (_, { id }) => PlayerModel.findById(id).exec(),
-    gifts: (_, { filter }) => {
+    gifts: async (_, { filter }) => {
       const query = GiftModel.find();
       if (filter.authorIds) query.in("authorId", [filter.authorIds]);
+      if (filter.targetIds) query.in("targetId", [filter.targetIds]);
       if (filter.before)
         query.lte("createdAt", filter.before.getMilliseconds());
       if (filter.after) query.gte("createdAt", filter.after.getMilliseconds());
-      return query.exec();
+      const gifts = await query.exec();
+      return gifts;
+    },
+    latestGifts: async (_, {}) => {
+      const query = GiftModel.find().gte("createdAt", Date.now() - 60 * 1000);
+      const gifts = await query.exec();
+      return gifts;
     },
   },
   Mutation: {

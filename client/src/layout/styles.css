@@ -1,0 +1,31 @@
+.item {
+  border: 1px solid #eee;
+  border-radius: 2px;
+  padding: 0.25rem;
+  display: flex;
+  flex: 1;
+}
+
+.gift-item {
+  display: flex;
+}
+
+.gift-item__time {
+  margin-right: 0.5rem;
+  margin-left: auto;
+  color: rgb(187, 187, 187);
+}
+
+.tab__player-resources {
+  flex: 2;
+}
+
+.tab__resources-log {
+  flex: 2;
+}
+
+.amount {
+  display: block;
+  margin-left: auto;
+  font-weight: bold;
+}

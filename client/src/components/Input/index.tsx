@@ -2,7 +2,7 @@ import { InputHook } from "hooks/useInput";
 import React from "react";
 import "./style.css";
 
-type InputProps = React.HTMLAttributes<HTMLInputElement> & {
+type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   name: string;
 } & InputHook;
 const Input: React.FC<InputProps> = (props) => {
