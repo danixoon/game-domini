@@ -29,7 +29,7 @@ type Player @entity {
   id: ID! @id
   username: String! @column
 
-  properties: Property! @embedded
+  properties: Property! @column(overrideType: "Partial<Record<PropertyType, any>>")
   resources: [Resource!]! @embedded
   gifts: [Gift!]! @embedded
 }

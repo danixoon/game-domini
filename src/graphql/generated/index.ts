@@ -1,4 +1,4 @@
-import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import type { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -7,13 +7,13 @@ export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Mayb
 export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: ObjectID;
+  ID: any;
   String: string;
   Boolean: boolean;
   Int: number;
   Float: number;
   Date: Date;
-  Property: Record<PropertyType, any>;
+  Property: Partial<Record<PropertyType, any>>;
   Void: any;
 };
 
@@ -115,7 +115,7 @@ export type SendGiftPayload = {
   amount: Scalars['Int'];
 };
 
-import { ObjectID } from 'mongodb';
+
 export type GiftDbObject = {
   resourceType: ResourceType,
   targetId: IdDbObject['_id'],
@@ -125,9 +125,9 @@ export type GiftDbObject = {
 };
 
 export type PlayerDbObject = {
-  _id: ObjectID,
+  _id: ObjectId,
   username: string,
-  properties: PropertyDbObject,
+  properties: Partial<Record<PropertyType, any>>,
   resources: Array<ResourceDbObject>,
   gifts: Array<GiftDbObject>,
 };

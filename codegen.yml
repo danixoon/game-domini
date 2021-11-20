@@ -19,14 +19,16 @@ generates:
       - typescript-mongodb
       - typescript-resolvers
     config:
+      objectIdType: ObjectId
       enumsAsString: false
       enumsAsTypes: true
+      useTypeImports: true
       constEnums: true
       scalars:
         Void: null
         Date: Date
-        ID: ObjectID
-        Property: Record<PropertyType, any>
+        ID: any
+        Property: Partial<Record<PropertyType, any>>
       contextType: Backend.GraphQL.GraphQLContext
 require:
   - ts-node/register
