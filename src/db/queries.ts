@@ -1,5 +1,6 @@
 import PQueue from "p-queue";
 import {
+  PlayerDbObject,
   // Scalars,
   PropertyType,
   ResourceType,
@@ -152,14 +153,20 @@ export const clearDb = async () => {
   );
 };
 
+export const createPlayers = (
+  players: Partial<Omit<PlayerDbObject, "username">> & { username: string }[]
+) => {
+  return PlayerModel.create(players);
+};
+
 export const fillDb = async () => {
   const players = [
     { username: "Bob", properties: { AGILITY: 49 } },
     { username: "Alice" },
-    { username: "Dan" },
+    { username: "Dan", properties: { LUCK: 20 } },
   ];
 
-  const [a, b, c] = await PlayerModel.create(players);
+  const [a, b, c] = await createPlayers(players);
 
   await Promise.all([
     buff(a.id, "CRYSTAL", 10),
@@ -170,5 +177,5 @@ export const fillDb = async () => {
     buff(b.id, "CRYSTAL", 9),
   ]);
 
-  await buffByProperty("LUCK", 48, "GOLD", 100);
+  await buffByProperty("LUCK", 10, "GOLD", 199);
 };

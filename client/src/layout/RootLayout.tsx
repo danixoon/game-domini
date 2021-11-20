@@ -179,7 +179,7 @@ const GiftSendTab: React.FC<{
           </select>
         </label>
         <label>
-          Получатель
+          Ресурс
           <select {...bind} name="resourceType">
             {Object.entries(resourceTypeNameMap).map(([type, name]) => (
               <option value={type}>{name}</option>
