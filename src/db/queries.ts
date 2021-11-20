@@ -154,7 +154,8 @@ export const clearDb = async () => {
 };
 
 export const createPlayers = (
-  players: Partial<Omit<PlayerDbObject, "username">> & { username: string }[]
+  players: Partial<Omit<PlayerDbObject, "username" | "resources">> &
+    { username: string }[]
 ) => {
   return PlayerModel.create(players);
 };
