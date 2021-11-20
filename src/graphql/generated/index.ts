@@ -106,7 +106,11 @@ export type Resource = {
 
 export type ResourceType =
   | 'GOLD'
-  | 'CRYSTAL';
+  | 'CRYSTAL'
+  | 'ETH'
+  | 'BTC'
+  | 'LOVE'
+  | 'LIFE';
 
 export type SendGiftPayload = {
   targetId: Scalars['ID'];

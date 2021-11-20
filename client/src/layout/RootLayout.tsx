@@ -35,6 +35,10 @@ const List: React.FC<{
 const resourceTypeNameMap: Record<ResourceType, string> = {
   CRYSTAL: "Кристаллы",
   GOLD: "Золото",
+  BTC: "Биткоин",
+  LOVE: "Любовь",
+  ETH: "Эфир",
+  LIFE: "Жизнь",
 };
 
 const resourceTypeNameMapper = (type: ResourceType) =>

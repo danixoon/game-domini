@@ -126,7 +126,7 @@ export const sendGift = (
     const targetResource = author.resources.find(
       (res) => res.resourceType === resourceType
     );
-    if (!targetResource || targetResource.amount <= amount)
+    if (!targetResource || targetResource.amount < amount)
       throw new Error("У вас недостаточно ресурса для подарка");
 
     const gifts = await GiftModel.create(
@@ -160,23 +160,56 @@ export const createPlayers = (
   return PlayerModel.create(players);
 };
 
+const names = ["Alice", "Bob", "Dan", "Max", "Andrew", "Jason", "John", "Oven"];
+const properties: PropertyType[] = ["AGILITY", "LUCK", "STRENGTH", "STEALTH"];
+const resources: ResourceType[] = [
+  "GOLD",
+  "CRYSTAL",
+  "BTC",
+  "LOVE",
+  "ETH",
+  "LIFE",
+];
+const fillArray = <T>(amount: number, cb: (i: number) => T) =>
+  new Array(amount).fill(0).map((v, i) => cb(i));
+const getRandomItem = <T>(array: T[]) =>
+  array[Math.floor(Math.random() * array.length)];
+const getRandomInt = (min: number, max: number) =>
+  Math.floor(min + Math.random() * (max - min));
+
 export const fillDb = async () => {
-  const players = [
-    { username: "Bob", properties: { AGILITY: 49 } },
-    { username: "Alice" },
-    { username: "Dan", properties: { LUCK: 20 } },
-  ];
+  const playerDocs = names
+    .sort((v) => (Math.random() ? -1 : 1))
+    .map((username) => ({
+      username,
+      properties: properties.reduce(
+        (props, prop) => ({
+          ...props,
+          [prop]: Math.floor(Math.random() * 100),
+        }),
+        {} as Player["properties"]
+      ),
+    }));
 
-  const [a, b, c] = await createPlayers(players);
+  const players = await createPlayers(playerDocs);
+  const buffsCount = Math.floor(10 + Math.random() * 30);
 
-  await Promise.all([
-    buff(a.id, "CRYSTAL", 10),
-    buff(a.id, "GOLD", 50),
-    buff(b.id, "CRYSTAL", 200),
-    buff(b.id, "GOLD", 10000),
-    buff(b.id, "GOLD", 15000),
-    buff(b.id, "CRYSTAL", 9),
-  ]);
+  const buffs: Promise<any>[] = [];
 
-  await buffByProperty("LUCK", 10, "GOLD", 199);
+  for (let i = 0; i < buffsCount; i++) {
+    const player = getRandomItem(players);
+    buffs.push(
+      buff(player.id, getRandomItem(resources), getRandomInt(25, 120))
+    );
+    buffs.push(
+      buffByProperty(
+        getRandomItem(properties),
+        getRandomInt(1, 60),
+        getRandomItem(resources),
+        getRandomInt(40, 150)
+      )
+    );
+  }
+
+  await Promise.all(buffs);
 };

@@ -107,7 +107,11 @@ export type Resource = {
 
 export enum ResourceType {
   Gold = 'GOLD',
-  Crystal = 'CRYSTAL'
+  Crystal = 'CRYSTAL',
+  Eth = 'ETH',
+  Btc = 'BTC',
+  Love = 'LOVE',
+  Life = 'LIFE'
 }
 
 export type SendGiftPayload = {

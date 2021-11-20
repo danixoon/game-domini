@@ -26,7 +26,14 @@ const playerSchema = createSchema<PlayerDbObject>({
 });
 
 playerSchema.pre("save", async function (err) {
-  const avaliableResources: ResourceType[] = ["CRYSTAL", "GOLD"];
+  const avaliableResources: ResourceType[] = [
+    "GOLD",
+    "CRYSTAL",
+    "BTC",
+    "LOVE",
+    "ETH",
+    "LIFE",
+  ];
   const created = await ResourceModel.create(
     avaliableResources.map((type) => ({
       resourceType: type,

@@ -4,7 +4,11 @@ scalar Property
 
 enum ResourceType {
   GOLD
-  CRYSTAL
+  CRYSTAL,
+  ETH,
+  BTC,
+  LOVE,
+  LIFE
 }
 
 enum PropertyType {
