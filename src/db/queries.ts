@@ -1,5 +1,6 @@
 import PQueue from "p-queue";
 import {
+  Player,
   PlayerDbObject,
   // Scalars,
   PropertyType,
@@ -154,8 +155,7 @@ export const clearDb = async () => {
 };
 
 export const createPlayers = (
-  players: Partial<Omit<PlayerDbObject, "username" | "resources">> &
-    { username: string }[]
+  players: ({ username: string } & Partial<Pick<Player, "properties">>)[]
 ) => {
   return PlayerModel.create(players);
 };
