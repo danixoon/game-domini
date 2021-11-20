@@ -40,7 +40,7 @@ export const buff = async (
 
 export const buffByProperty = async (
   property: PropertyType,
-  treshold: number,
+  threshold: number,
   resourceType: ResourceType,
   amount: number
 ) => {
@@ -61,7 +61,7 @@ export const buffByProperty = async (
     },
     {
       $match: {
-        [`players.properties.${property}`]: { $ne: null, $gte: treshold },
+        [`players.properties.${property}`]: { $ne: null, $gte: threshold },
         resourceType,
       },
     },
